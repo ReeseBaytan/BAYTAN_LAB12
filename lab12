@@ -1,0 +1,66 @@
+ef display_menu():
+    menu = {
+        1: ("Hamburger", 180.00),
+        2: ("Spaghetti", 200.00),
+        3: ("Chicken Wings", 150.00),
+        4: ("Milkshake", 100.00),
+        5: ("French Fries", 90.00)
+    }
+    print("\n--- Menu ---")
+    for item, details in menu.items():
+        print(f"{item}. {details[0]} - ₱{details[1]:.2f}")
+    return menu
+
+def get_orders(menu):
+    orders = []
+    while True:
+        try:
+            choice = int(input("\nEnter the number of the item you'd like to order (0 to finish): "))
+            if choice == 0:
+                break
+            elif choice in menu:
+                quantity = int(input(f"How many {menu[choice][0]}(s) would you like to order? "))
+                if quantity > 0:
+                    orders.append((menu[choice][0], menu[choice][1], quantity))
+                    print(f"Added {quantity} {menu[choice][0]}(s) to your order.")
+                else:
+                    print("Please enter a valid quantity.")
+            else:
+                print("Invalid choice. Please select a valid menu item.")
+        except ValueError:
+            print("Invalid input. Please enter a number.")
+    return orders
+
+def calculate_total(orders):
+    total = sum(price * quantity for _, price, quantity in orders)
+    return total
+
+def process_payment(total_cost):
+    while True:
+        try:
+            cash = float(input(f"\nThe total is ₱{total_cost:.2f}. Enter payment amount: ₱"))
+            if cash >= total_cost:
+                change = cash - total_cost
+                print(f"Payment accepted. Your change is ₱{change:.2f}.")
+                break
+            else:
+                print(f"Insufficient payment. You still owe ₱{total_cost - cash:.2f}.")
+        except ValueError:
+            print("Invalid input. Please enter a valid amount.")
+
+def main():
+    print("Welcome to the Food Ordering System!")
+    menu = display_menu()
+    orders = get_orders(menu)
+    if orders:
+        print("\n--- Order Summary ---")
+        for item, price, quantity in orders:
+            print(f"{item} x{quantity} - ₱{price * quantity:.2f}")
+        total_cost = calculate_total(orders)
+        process_payment(total_cost)
+    else:
+        print("\nNo items ordered. Thank you for visiting!")
+    print("\nThank you for your order! Enjoy your meal.")
+
+if __name__ == "__main__":
+    main()
